@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Request
+import json
+from datetime import datetime
 
 app = FastAPI()
 
@@ -6,13 +8,10 @@ app = FastAPI()
 async def handle_webhook(request: Request):
     payload = await request.json()
 
-    # --- log do terminala ---
-    print("\n=== Webhook received ===")
-    print(payload)
-
-    # --- log do pliku ---
+    # Zapis do pliku
     with open("webhook.log", "a", encoding="utf-8") as f:
-        f.write("\n=== Webhook received ===\n")
-        f.write(str(payload) + "\n")
+        f.write(f"\n=== {datetime.now()} ===\n")
+        f.write(json.dumps(payload, indent=2, ensure_ascii=False))
 
+    print("Webhook received:", payload)
     return {"status": "received"}
